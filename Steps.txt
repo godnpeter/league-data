@@ -1,0 +1,16 @@
+Objective:
+1. Fetch gameJsons for each player. 20 games each.
+2. Fetch gameJsons in a format that makes it easy to fetch them later on
+
+Files to create:
+1. Dictionary for each player
+    - Key: accountId
+    - Value: list of gameJson gameIds
+    - Save in DataFrame format? Or as text file? Look up how to save dictionary with python
+2. List of all gameIds
+    - Keep track of all gameIds downloaded
+
+Tests to do:
+1. Keeping dictionary & list downloaded locally with python
+2. Fetching files with specific time directions with riotwatcher
+ => Test these on colab notebook
