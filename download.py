@@ -18,13 +18,20 @@ def download_game(gameId):
     proceed = False
     with open(path+'/Tracker_files/GameIds.txt', 'r+') as fp:
         arr = fp.readlines()
-        arr = [item.strip('\n') for item in arr]
+        arr = [int(item.strip('\n')) for item in arr]
         if(gameId not in arr):
             proceed = True
             fp.write('{}\n'.format(gameId))
     
     if(proceed):
-        game_dict = lol_watcher.match.by_id(my_region, gameId)
+        try:
+            game_dict = lol_watcher.match.by_id(my_region, gameId)
+        except:
+            with open(path+'/Tracker_files/Failed_GameIds.txt', 'a') as fp:
+                fp.write('{}\n'.format(gameId))
+            time.sleep(60)
+            game_dict = lol_watcher.match.by_id(my_region, gameId)
+            
         with open(path+'/games/{}.json'.format(gameId), 'w') as fp:
             json.dump(game_dict, fp)
 
@@ -42,26 +49,30 @@ for idx in range(9858):
     gameCreation = match_dict['gameCreation']
     gameId = match_dict['gameId']
     accountIds = [match_dict['participantIdentities'][num]['player']['currentAccountId'] for num in range(10)]
-
-    # Recording accountId list to a file
-    with open(path+'/Tracker_files/AccountIds.txt', 'r+') as fp:
+    
+    with open(path+'/Tracker_files/Completed_rootIds.txt', 'r+') as fp:
         arr = fp.readlines()
-        arr = [item.strip('\n') for item in arr]
+        arr = [int(item.strip('\n')) for item in arr]
         
-        for accountId in accountIds:
-            if accountId not in arr:
-                fp.write('{}\n'.format(accountId))
+        if(gameId not in arr):
+            # Recording accountId list to a file
+            with open(path+'/Tracker_files/AccountIds.txt', 'r+') as fp:
+                arr = fp.readlines()
+                arr = [item.strip('\n') for item in arr]
                 
-    # Fetching gameId list for each accountId and saving the game
-    week_in_milli = 604800000
-    for accountId in accountIds:
-        matchlist_dict = lol_watcher.match.matchlist_by_account(my_region, accountId,
-            begin_time=gameCreation-week_in_milli, end_time=gameCreation)
-        matchlist_df = pd.json_normalize(matchlist_dict, record_path='matches')
-        match_list = matchlist_df['gameId'].tolist()
-        
-        for matchId in match_list:
-            download_game(matchId)
-        
-        break
-    break
+                for accountId in accountIds:
+                    if accountId not in arr:
+                        fp.write('{}\n'.format(accountId))
+                        
+            # Fetching gameId list for each accountId and saving the game
+            week_in_milli = 604800000
+            for accountId in accountIds:
+                matchlist_dict = lol_watcher.match.matchlist_by_account(my_region, accountId,
+                    begin_time=gameCreation-week_in_milli, end_time=gameCreation)
+                matchlist_df = pd.json_normalize(matchlist_dict, record_path='matches')
+                match_list = matchlist_df['gameId'].tolist()
+                
+                for matchId in match_list:
+                    download_game(matchId)
+                    
+            fp.write('{}\n'.format(gameId))
