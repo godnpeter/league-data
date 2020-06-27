@@ -27,13 +27,13 @@ def download_game(gameId):
         try:
             game_dict = lol_watcher.match.by_id(my_region, gameId)
         except:
-            with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as fp:
-                fp.write('{}\n'.format(gameId))
+            with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as failed_fp:
+                failed_fp.write('{}\n'.format(gameId))
             time.sleep(60)
             game_dict = lol_watcher.match.by_id(my_region, gameId)
             
-        with open(path+'/games/{}.json'.format(gameId), 'w') as fp:
-            json.dump(game_dict, fp)
+        with open(path+'/games/{}.json'.format(gameId), 'w') as games_fp:
+            json.dump(game_dict, games_fp)
 
 ######################################################################################################################################
 
@@ -56,13 +56,13 @@ for idx in range(9858):
         
         if(gameId not in arr):
             # Recording accountId list to a file
-            with open(path+'/Tracker_files/AccountIds.txt', 'r+') as fp:
-                arr = fp.readlines()
+            with open(path+'/Tracker_files/AccountIds.txt', 'r+') as accountId_fp:
+                arr = accountId_fp.readlines()
                 arr = [item.strip('\n') for item in arr]
                 
                 for accountId in accountIds:
                     if accountId not in arr:
-                        fp.write('{}\n'.format(accountId))
+                        accountId_fp.write('{}\n'.format(accountId))
                         
             # Fetching gameId list for each accountId and saving the game
             week_in_milli = 604800000
