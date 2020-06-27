@@ -27,7 +27,7 @@ def download_game(gameId):
         try:
             game_dict = lol_watcher.match.by_id(my_region, gameId)
         except:
-            with open(path+'/Tracker_files/Failed_GameIds.txt', 'a') as fp:
+            with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as fp:
                 fp.write('{}\n'.format(gameId))
             time.sleep(60)
             game_dict = lol_watcher.match.by_id(my_region, gameId)
