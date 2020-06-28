@@ -33,6 +33,7 @@ def download_game(gameId):
         except ApiError as err:
             print("Riotwatcher Failed")
             if(err.response.status_code == 403 or err.response.status_code == 429):
+                print("Exiting: ")
                 sys.exit("403 or 429")
             else:
                 with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as failed_fp:
