@@ -7,7 +7,7 @@ import time
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-apiKey = 'RGAPI-9ac19158-e679-477b-8f70-426a8e1bf63e'
+apiKey = 'RGAPI-024ffbf6-33cc-4658-ba52-54c776a500e5'
 lol_watcher = LolWatcher(apiKey)
 my_region = 'euw1'
 
@@ -27,6 +27,7 @@ def download_game(gameId):
         try:
             game_dict = lol_watcher.match.by_id(my_region, gameId)
         except:
+            print("Riotwatcher Failed")
             with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as failed_fp:
                 failed_fp.write('{}\n'.format(gameId))
             time.sleep(60)
