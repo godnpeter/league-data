@@ -3,6 +3,7 @@ import json
 import os
 import pandas as pd
 import time
+import sys
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -26,15 +27,16 @@ def download_game(gameId):
     if(proceed):
         try:
             game_dict = lol_watcher.match.by_id(my_region, gameId)
-        except:
-            print("Riotwatcher Failed")
-            with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as failed_fp:
-                failed_fp.write('{}\n'.format(gameId))
-            time.sleep(60)
-            game_dict = lol_watcher.match.by_id(my_region, gameId)
             
-        with open(path+'/games/{}.json'.format(gameId), 'w') as games_fp:
-            json.dump(game_dict, games_fp)
+            with open(path+'/games/{}.json'.format(gameId), 'w') as games_fp:
+                json.dump(game_dict, games_fp)
+        except ApiError as err:
+            print("Riotwatcher Failed")
+            if(err.response.status_code == 403 or err.response.status_code == 429):
+                sys.exit("403 or 429")
+            else:
+                with open(path+'/Tracker_files/Failed_gameIds.txt', 'a') as failed_fp:
+                    failed_fp.write('{}\n'.format(gameId))
 
 ######################################################################################################################################
 
