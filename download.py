@@ -8,7 +8,7 @@ import sys
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-apiKey = 'RGAPI-024ffbf6-33cc-4658-ba52-54c776a500e5'
+apiKey = 'RGAPI-adc81576-bd04-49da-9303-bd45dadff02a'
 lol_watcher = LolWatcher(apiKey)
 my_region = 'euw1'
 
