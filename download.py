@@ -31,7 +31,7 @@ def download_game(gameId):
             with open(path+'/games/{}.json'.format(gameId), 'w') as games_fp:
                 json.dump(game_dict, games_fp)
         except ApiError as err:
-            print("Riotwatcher Failed")
+            print("Riotwatcher Failed, ", err)
             if(err.response.status_code == 403 or err.response.status_code == 429):
                 print("Exiting: ")
                 sys.exit("403 or 429")
